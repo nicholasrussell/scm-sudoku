@@ -256,13 +256,12 @@
 
 ;; Makes a copy of a hash-table
 (define (hash-table/copy hash-table)
-  (define new-hash-table (make-string-hash-table))
-  (let loop ((key-pairs (hash-table->alist hash-table)))
-    (if (null? key-pairs)
-      new-hash-table
-      (begin
-        (hash-table/put! new-hash-table (caar key-pairs) (cdar key-pairs))
-        (loop (cdr key-pairs))))))
+  (let ((new-hash-table (make-string-hash-table)))
+    (for-each
+      (lambda (key-pair)
+        (hash-table/put! new-hash-table (car key-pair) (cdr key-pair)))
+      (hash-table->alist hash-table))
+    new-hash-table))
 
 ;; Converts a grid string to a list of strings of the individual characters
 (define (grid-str-to-list grid)
